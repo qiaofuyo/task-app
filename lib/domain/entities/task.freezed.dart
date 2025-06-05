@@ -38,7 +38,8 @@ mixin _$Task {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            const DeepCollectionEquality().equals(other.quadrant, quadrant) &&
+            (identical(other.quadrant, quadrant) ||
+                other.quadrant == quadrant) &&
             (identical(other.completed, completed) ||
                 other.completed == completed) &&
             (identical(other.createdAt, createdAt) ||
@@ -46,8 +47,8 @@ mixin _$Task {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, title, description,
-      const DeepCollectionEquality().hash(quadrant), completed, createdAt);
+  int get hashCode => Object.hash(
+      runtimeType, id, title, description, quadrant, completed, createdAt);
 
   @override
   String toString() {
@@ -84,7 +85,7 @@ class _$TaskCopyWithImpl<$Res> implements $TaskCopyWith<$Res> {
     Object? id = null,
     Object? title = null,
     Object? description = null,
-    Object? quadrant = freezed,
+    Object? quadrant = null,
     Object? completed = null,
     Object? createdAt = null,
   }) {
@@ -101,7 +102,7 @@ class _$TaskCopyWithImpl<$Res> implements $TaskCopyWith<$Res> {
           ? _self.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
-      quadrant: freezed == quadrant
+      quadrant: null == quadrant
           ? _self.quadrant
           : quadrant // ignore: cast_nullable_to_non_nullable
               as Quadrant,
@@ -159,7 +160,8 @@ class _Task implements Task {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            const DeepCollectionEquality().equals(other.quadrant, quadrant) &&
+            (identical(other.quadrant, quadrant) ||
+                other.quadrant == quadrant) &&
             (identical(other.completed, completed) ||
                 other.completed == completed) &&
             (identical(other.createdAt, createdAt) ||
@@ -167,8 +169,8 @@ class _Task implements Task {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, title, description,
-      const DeepCollectionEquality().hash(quadrant), completed, createdAt);
+  int get hashCode => Object.hash(
+      runtimeType, id, title, description, quadrant, completed, createdAt);
 
   @override
   String toString() {
@@ -206,7 +208,7 @@ class __$TaskCopyWithImpl<$Res> implements _$TaskCopyWith<$Res> {
     Object? id = null,
     Object? title = null,
     Object? description = null,
-    Object? quadrant = freezed,
+    Object? quadrant = null,
     Object? completed = null,
     Object? createdAt = null,
   }) {
@@ -223,7 +225,7 @@ class __$TaskCopyWithImpl<$Res> implements _$TaskCopyWith<$Res> {
           ? _self.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
-      quadrant: freezed == quadrant
+      quadrant: null == quadrant
           ? _self.quadrant
           : quadrant // ignore: cast_nullable_to_non_nullable
               as Quadrant,
