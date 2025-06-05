@@ -1,0 +1,4 @@
+generate_for:
+  - lib/**.dart
+# 生成文件名
+output: lib/core/di/injection.config.dart
