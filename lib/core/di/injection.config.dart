@@ -18,6 +18,8 @@ import 'package:task_app/core/di/database_module.dart' as _i574;
 import 'package:task_app/data/repositories/local_task_repository.dart' as _i779;
 import 'package:task_app/domain/services/i_task_repository.dart' as _i67;
 import 'package:task_app/domain/services/i_transcription_engine.dart' as _i662;
+import 'package:task_app/infrastructure/transcription/vosk_transcription_engine.dart'
+    as _i920;
 
 extension GetItInjectableX on _i174.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -36,6 +38,8 @@ extension GetItInjectableX on _i174.GetIt {
       instanceName: 'AppDatabase',
       preResolve: true,
     );
+    gh.lazySingleton<_i662.ITranscriptionEngine>(
+        () => _i920.VoskTranscriptionEngine());
     gh.lazySingleton<_i67.ITaskRepository>(() => _i779.LocalTaskRepository(
         gh<_i779.Database>(instanceName: 'AppDatabase')));
     gh.factory<_i149.TranscribeAndCreateTaskUseCase>(
