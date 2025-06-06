@@ -45,7 +45,7 @@ flutter {
 
 dependencies {
     implementation("com.google.android.material:material:1.11.0")
-    
+
     // 添加 Vosk 语音识别库
-    implementation("com.alphacephei:vosk-android:0.3.50")
+    implementation("com.alphacephei:vosk-android:0.3.47")
 }

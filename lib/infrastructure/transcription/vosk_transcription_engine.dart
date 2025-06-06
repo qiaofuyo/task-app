@@ -12,13 +12,16 @@ class VoskTranscriptionEngine implements ITranscriptionEngine {
 
   @override
   Stream<String> startTranscription() {
+    // 1. 接收 Android 发来的字符串流
     _stream = _eventChannel.receiveBroadcastStream().map((event) => event as String);
+    // 2. 通知 Android 层启动 Vosk 录音与识别
     _methodChannel.invokeMethod('start');
     return _stream!;
   }
 
   @override
   Future<void> stopTranscription() {
+    // 通知 Android 停止
     return _methodChannel.invokeMethod('stop');
   }
 }

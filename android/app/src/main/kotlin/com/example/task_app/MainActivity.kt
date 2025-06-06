@@ -1,52 +1,40 @@
+package com.example.task_app
+
+import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 import org.vosk.Model
 import org.vosk.Recognizer
-import org.vosk.android.RecordingStream
+import org.vosk.android.RecognitionListener
+import org.vosk.android.SpeechService
 
-package com.example.task_app
-
-import io.flutter.embedding.android.FlutterActivity
-
-class MainActivity: FlutterActivity() {
-  private val METHOD_CHANNEL = "task_app/transcription_method"
-  private val EVENT_CHANNEL = "task_app/transcription_event"
+class MainActivity: FlutterActivity(), RecognitionListener {
+  private var speechService: SpeechService? = null
   private var recognizer: Recognizer? = null
-  private var stream: RecordingStream? = null
   private var eventSink: EventChannel.EventSink? = null
 
   override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
     super.configureFlutterEngine(flutterEngine)
 
-    // MethodChannel：启动/停止转写
-    MethodChannel(flutterEngine.dartExecutor.binaryMessenger, METHOD_CHANNEL)
+    // Flutter → Android 方法通道
+    MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "task_app/transcription_method")
       .setMethodCallHandler { call, result ->
         when (call.method) {
           "start" -> {
-            // 初始化 Vosk 模型与识别器
-            val assetManager = this.assets
-            val model = Model(assetManager, "model")
+            // 加载 model：release 后位于 assets/flutter_assets/model
+            val modelPath = filesDir.absolutePath + "/flutter_assets/model"
+            val model = Model(modelPath)
             recognizer = Recognizer(model, 16000.0f)
 
-            // 创建并启动录音流
-            stream = RecordingStream.Builder()
-              .setSampleRate(16000)
-              .build()
-            stream?.start { data, _ ->
-              // 接收音频数据，输出完整结果或部分结果
-              if (recognizer?.acceptWaveForm(data, data.size) == true) {
-                val text = recognizer?.result ?: ""
-                eventSink?.success(text)
-              } else {
-                val partial = recognizer?.partialResult ?: ""
-                eventSink?.success(partial)
-              }
-            }
+            // 正确实例化 SpeechService 并启动监听
+            speechService = SpeechService(recognizer, 16000.0f)
+            speechService?.startListening(this)
+
             result.success(null)
           }
           "stop" -> {
-            stream?.stop()
+            speechService?.stop()
             recognizer?.close()
             result.success(null)
           }
@@ -54,16 +42,32 @@ class MainActivity: FlutterActivity() {
         }
       }
 
-    // EventChannel：推送实时文字流
-    EventChannel(flutterEngine.dartExecutor.binaryMessenger, EVENT_CHANNEL)
+    // Android → Flutter 事件通道
+    EventChannel(flutterEngine.dartExecutor.binaryMessenger, "task_app/transcription_event")
       .setStreamHandler(object: EventChannel.StreamHandler {
-        override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+        override fun onListen(args: Any?, events: EventChannel.EventSink?) {
           eventSink = events
         }
-        override fun onCancel(arguments: Any?) {
+        override fun onCancel(args: Any?) {
           eventSink = null
         }
       })
   }
-}
 
+  // RecognitionListener 回调
+  override fun onPartialResult(hypothesis: String) {
+    eventSink?.success(hypothesis)
+  }
+  override fun onResult(hypothesis: String) {
+    eventSink?.success(hypothesis)
+  }
+  override fun onFinalResult(hypothesis: String) {
+    eventSink?.success(hypothesis)
+  }
+  override fun onError(exception: Exception) {
+    eventSink?.error("RECOG_ERROR", exception.message, null)
+  }
+  override fun onTimeout() {
+    eventSink?.endOfStream()
+  }
+}
