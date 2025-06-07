@@ -3,10 +3,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_app/core/di/injection.dart';
 import 'presentation/pages/quadrant_page.dart';
+import 'package:workmanager/workmanager.dart';
+
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    // 这里可以调用本地通知或其它逻辑
+    return Future.value(true);
+  });
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await configureDependencies(); // DI（依赖注入配置） 初始化
+  Workmanager().initialize(
+    callbackDispatcher, 
+    isInDebugMode: false,
+  );
   runApp(const ProviderScope(child: MyApp()));
 }
 
