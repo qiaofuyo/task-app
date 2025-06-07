@@ -12,6 +12,8 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:sqflite/sqflite.dart' as _i779;
+import 'package:task_app/application/usecases/schedule_task_reminder_usecase.dart'
+    as _i1043;
 import 'package:task_app/application/usecases/transcribe_and_create_task_usecase.dart'
     as _i149;
 import 'package:task_app/core/di/database_module.dart' as _i574;
@@ -33,6 +35,8 @@ extension GetItInjectableX on _i174.GetIt {
       environmentFilter,
     );
     final databaseModule = _$DatabaseModule();
+    gh.factory<_i1043.ScheduleTaskReminderUseCase>(
+        () => _i1043.ScheduleTaskReminderUseCase());
     await gh.factoryAsync<_i779.Database>(
       () => databaseModule.database,
       instanceName: 'AppDatabase',
@@ -46,6 +50,7 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i149.TranscribeAndCreateTaskUseCase(
               gh<_i662.ITranscriptionEngine>(),
               gh<_i67.ITaskRepository>(),
+              gh<_i1043.ScheduleTaskReminderUseCase>(),
             ));
     return this;
   }

@@ -7,7 +7,11 @@ import 'package:workmanager/workmanager.dart';
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    // 这里可以调用本地通知或其它逻辑
+    if (task == 'taskReminder') {
+      // final taskId = inputData?['taskId'] as String?;
+      // 这里可根据 taskId 获取更多信息并发送通知
+      // … 通知逻辑 …
+    }
     return Future.value(true);
   });
 }
