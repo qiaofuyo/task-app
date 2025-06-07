@@ -8,4 +8,4 @@ final GetIt getIt = GetIt.instance;
 
 /// 运行此方法即可注册所有标注了 @injectable 的类型
 @InjectableInit()
-void configureDependencies() => getIt.init();
+Future<void> configureDependencies() => getIt.init();
