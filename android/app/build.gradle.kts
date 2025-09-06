@@ -13,6 +13,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -36,10 +37,6 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
         }
-        debug {
-            minifyEnabled = false
-            useProguard = false
-        }
     }
 }
 
@@ -52,4 +49,10 @@ dependencies {
 
     // 添加 Vosk 语音识别库
     implementation("com.alphacephei:vosk-android:0.3.47")
+    
+    // WorkManager
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
+
+    // 新增：desugar 库
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

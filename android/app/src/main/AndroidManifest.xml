@@ -8,6 +8,8 @@
         android:label="task_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <!-- Activity 声明 -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -35,6 +37,10 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- 通知推送 -->
+        <receiver android:name="be.tramckrijte.workmanager.WorkmanagerBroadcastReceiver" android:exported="false"/>
+        <receiver android:name="com.tekartik.sqflite.SqflitePlugin"/>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

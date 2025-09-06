@@ -28,7 +28,22 @@ adb install build\app\outputs\flutter-apk\app-debug.apk
 快速部署应用到设备，无需手动输入 adb 命令。
 flutter install
 
+检查 flutter 环境：
+flutter doctor
+
+查看可用设备：
+flutter devices
+
 ## 构建
+
+安装：
+adb install -r build/app/outputs/flutter-apk/app-debug.apk
+adb uninstall <你的应用包名>
+手动启动应用：
+adb shell monkey -p <你的应用包名> -c android.intent.category.LAUNCHER 1
+手动启动模拟器：
+emulator -list-avds
+emulator -avd <你的模拟器名字>
 
 发布模式： 
 flutter build apk（胖 APK）
@@ -39,10 +54,10 @@ flutter build apk --release --split-per-abi --shrink --target-platform android-a
 flutter build apk --profile --split-per-abi --shrink --target-platform android-arm64,android-x86_64
 
 调试模式： 
+flutter run（包含当前连接设备所需的架构支持）
 flutter build apk --debug
 flutter build apk --debug --target-platform android-arm64,android-x86
 flutter build apk --debug --target-platform android-arm,android-arm64,android-x86
-flutter run（包含当前连接设备所需的架构支持）
 
 ## 资源
 
